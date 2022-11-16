@@ -1,26 +1,40 @@
-import axios from "axios";
+import axios from 'axios';
 
-async function fetchCountryInformation(){
-    const BASE_URI = 'https://restcountries.com';
-    const ENDPOINT = 'v3.1/all';
-    try {
-        const response = await axios.get('BASE_URI + ENDPOINT');
-        console.log(countries.data[0]);
+async function fetchCountries() {
+  try {
+    const result = await axios.get('https://restcountries.com/v2/all');
+    const countries = result.data;
 
-        const { data: countries } = response;
-        const countryList = document.getElementById("countries");
+    countries.sort((a, b) => {
+      return a.population - b.population;
+    });
 
-        countries.map((country) => {
-            countryList.innerHTML += `
-                <li>
-                    <h3 class="countries-">${country[0].region}">${countries[0].name}</h3>
-                    <p>Has a population of ${country.data[0].polution} people</p>
-                    <img src="${country[0].flags.png}" alt="${country[0].name}"/>
-                </li>
-               `
-        })
-    }catch ( error ){
-        console.error( error )
-    }
+    createListItems(countries);
+
+  } catch (e) {
+    console.error(e);
+  }
 }
-fetchCountryInformation()
+
+fetchCountries();
+
+function createListItems(countries) {
+
+  const countryList = document.getElementById('country-list');
+
+function getRegionClass(currentRegion) {
+  switch (currentRegion) {
+    case 'Africa':
+      return 'blue';
+    case 'Americas':
+      return 'green';
+    case 'Asia':
+      return 'red';
+    case 'Europe':
+      return 'yellow';
+    case 'Oceania':
+      return 'purple';
+    default:
+      return 'default';
+  }
+}
